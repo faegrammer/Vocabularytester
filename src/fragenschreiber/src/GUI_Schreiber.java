@@ -8,11 +8,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @version 0.0.0_1
  * @author Cheesy
  */
 public class GUI_Schreiber extends javax.swing.JFrame {
@@ -55,9 +56,9 @@ public class GUI_Schreiber extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Falsche AntwortmÃ¶glichkeit:");
+        jLabel3.setText("Falsche Antwortmöglichkeit:");
 
-        jLabel4.setText("Falsche AntwortmÃ¶glichkeit2:");
+        jLabel4.setText("Falsche Antwortmöglichkeit2:");
 
         btSpeichern.setText("Speichern");
         btSpeichern.addActionListener(new java.awt.event.ActionListener() {
@@ -117,38 +118,59 @@ public class GUI_Schreiber extends javax.swing.JFrame {
     }//GEN-LAST:event_txtRichtigeFrageActionPerformed
 
     private void btSpeichernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSpeichernActionPerformed
-         
-        File f = new File("./fragen.txt");
-        
-        if(!f.exists()){
-            try {
-              f.createNewFile();
-     
-            } catch (IOException ex) {
-                Logger.getLogger(GUI_Schreiber.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-       try {
-            FileWriter fw = new FileWriter(f.getCanonicalFile(),true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter pw = new PrintWriter(bw);
-            pw.append(txtFrage.getText()+";"+txtRichtigeFrage.getText()+";"+txtFalsch1.getText()+";"+txtFalsch2.getText()+";0\r\n");
-            txtFrage.setText("");
-            txtFalsch1.setText("");
-            txtFalsch2.setText("");
-            txtRichtigeFrage.setText("");
-            pw.close();
-            bw.close();
-            fw.close();
-            
-            
-        } catch (IOException ex) {
-            Logger.getLogger(GUI_Schreiber.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-
+    	createEntry();
 
     }//GEN-LAST:event_btSpeichernActionPerformed
+    
+    private void createEntry(){
+        
+       File f = new File("./fragen.txt");
+       
+       if(!f.exists()){
+           try {
+             f.createNewFile();
+    
+           } catch (IOException ex) {
+               Logger.getLogger(GUI_Schreiber.class.getName()).log(Level.SEVERE, null, ex);
+           }
+       }
+      try {
+           FileWriter fw = new FileWriter(f.getCanonicalFile(),true);
+           BufferedWriter bw = new BufferedWriter(fw);
+           PrintWriter pw = new PrintWriter(bw);
+           LinkedList<String> l = new LinkedList<String>();
+           l.add(txtFrage.getText());
+           l.add(txtRichtigeFrage.getText());
+           l.add(txtFalsch1.getText());
+           l.add(txtFalsch2.getText());
+           
+           for (int i = 0; i < l.size(); i++) {
+				l.set(i,l.get(i).replace(";", ","));
+			}
+           
+           String appe = l.get(0);
+           
+           for (int i = 1; i < l.size(); i++) {
+				appe += ";"+l.get(i);
+			}
+           appe+= ";0\r\n";
+           
+           pw.append(appe);
+           txtFrage.setText("");
+           txtFalsch1.setText("");
+           txtFalsch2.setText("");
+           txtRichtigeFrage.setText("");
+           pw.close();
+           bw.close();
+           fw.close();
+           
+           
+       } catch (IOException ex) {
+           Logger.getLogger(GUI_Schreiber.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       
+
+    }
 
     /**
      * @param args the command line arguments
